@@ -19,6 +19,7 @@ import (
 
 	"github.com/timonwong/prometheus-webhook-dingtalk/config"
 	"github.com/timonwong/prometheus-webhook-dingtalk/internal/compat030"
+	"github.com/timonwong/prometheus-webhook-dingtalk/notifier"
 	"github.com/timonwong/prometheus-webhook-dingtalk/template"
 	"github.com/timonwong/prometheus-webhook-dingtalk/web"
 )
@@ -45,7 +46,14 @@ func run() int {
 			"config.file",
 			"Path to the configuration file.",
 		).Default("config.yml").String()
+		prometheusSvr = kingpin.Flag(
+			"prometheus.svr",
+			"prometheus service endpoint.",
+        ).Default("http://prometheus-xlchain-baas:9090").String()
 	)
+
+	fmt.Println("running-----")
+
 
 	// DO NOT REMOVE. For compatibility purpose
 	kingpin.Flag("web.ui-enabled", "").Hidden().BoolVar(enableWebUI)
@@ -77,6 +85,8 @@ func run() int {
 
 		flagsMap[f.Name] = f.Value.String()
 	}
+
+	notifier.SetPrometheusSvr(*prometheusSvr)
 
 	webHandler := web.New(log.With(logger, "component", "web"), &web.Options{
 		ListenAddress:   *listenAddress,

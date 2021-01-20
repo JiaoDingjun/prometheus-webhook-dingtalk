@@ -58,6 +58,8 @@ func (r *DingNotificationBuilder) renderText(data interface{}) (string, error) {
 }
 
 func (r *DingNotificationBuilder) Build(m *models.WebhookMessage) (*models.DingTalkNotification, error) {
+	modifierList.Do(m)
+
 	title, err := r.renderTitle(m)
 	if err != nil {
 		return nil, err
@@ -65,6 +67,10 @@ func (r *DingNotificationBuilder) Build(m *models.WebhookMessage) (*models.DingT
 	content, err := r.renderText(m)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(m.ExtraInfo) > 0 {
+		content = content + "\n**附加信息:**" + m.ExtraInfo
 	}
 
 	notification := &models.DingTalkNotification{

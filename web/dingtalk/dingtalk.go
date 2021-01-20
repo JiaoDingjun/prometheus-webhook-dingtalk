@@ -92,6 +92,9 @@ func (api *API) serveSend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	msgBody, _ := json.Marshal(&notification)
+	level.Info(logger).Log("msg", "msgBody", string(msgBody))
+
 	robotResp, err := notifier.SendNotification(notification, httpClient, &target)
 	if err != nil {
 		level.Error(logger).Log("msg", "Failed to send notification", "err", err)

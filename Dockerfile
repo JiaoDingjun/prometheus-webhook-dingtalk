@@ -11,10 +11,8 @@ COPY config.example.yml                                 /etc/prometheus-webhook-
 COPY contrib                                            /etc/prometheus-webhook-dingtalk/
 COPY template/default.tmpl                              /etc/prometheus-webhook-dingtalk/templates/default.tmpl
 
-RUN mkdir -p /prometheus-webhook-dingtalk && \
-    chown -R nobody:nogroup /etc/prometheus-webhook-dingtalk /prometheus-webhook-dingtalk
+RUN mkdir -p /prometheus-webhook-dingtalk 
 
-USER       nobody
 EXPOSE     8060
 VOLUME     [ "/prometheus-webhook-dingtalk" ]
 WORKDIR    /prometheus-webhook-dingtalk
